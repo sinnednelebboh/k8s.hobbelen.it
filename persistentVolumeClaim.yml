@@ -4,6 +4,7 @@ kind: PersistentVolumeClaim
 metadata:
   name: mysql-data-disk
 spec:
+  persistentVolumeReclaimPolicy: Recycle
   accessModes:
     - ReadWriteOnce
   resources:
