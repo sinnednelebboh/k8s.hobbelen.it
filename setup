@@ -1,0 +1,62 @@
+--Server set up--
+
+Server 1 (Ubuntu 20.04 LTS Server 8gb 8cpu ) – K8s-master – xx.xx.xx.xx
+Server 2 (Ubuntu 20.04 LTS Server 4cpu 4gb ) – K8s-node-1 – xx.xx.xx.xx
+Server 3 (Ubuntu 20.04 LTS Server  4cpu 4gb) – K8s-node-2 – xx.xx.xx.xx
+
+--interne hostname setup--
+
+sudo hostnamectl set-hostname "k8s-master"
+sudo hostnamectl set-hostname "k8s-node-0"
+sudo hostnamectl set-hostname "k8s-node-1"
+
+--toevoegen aan /etc/hosts --
+
+xx.xx.xx.xx    k8s-master
+xx.xx.xx.xx    k8s-node-0
+xx.xx.xx.xx    k8s-node-1
+
+-- installeer docker container --
+
+sudo apt update
+sudo apt install -y docker.io
+sudo systemctl enable docker.service --now
+
+-- schakel swap uit op alle servers (!) -- 
+
+sudo swapoff -a
+
+-- activeer ip4 forwarding op alle servers --
+
+/etc/sysctl.conf
+uncomment --> net.ipv4.ip_forward=1
+
+-- installeer kubectl, kubelet en kubeadmin op alles servers --
+
+ sudo apt install -y apt-transport-https curl
+ curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add
+ sudo apt-add-repository "deb http://apt.kubernetes.io/ kubernetes-xenial main"
+ sudo apt update
+ sudo apt install -y kubelet kubeadm kubectl
+ 
+--initialisatie --
+
+sudo kubeadm init  -> volg de instructies na het voltooien
+
+-- indien kubectl niet werkt na reboot --
+
+mkdir -p $HOME/.kube
+sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+sudo chown $(id -u):$(id -g) $HOME/.kube/config
+
+-- installeer calico pod network op master --
+
+kubectl apply -f https://docs.projectcalico.org/v3.14/manifests/calico.yaml
+
+-- bash completion --
+echo 'source <(kubectl completion bash)' >>~/.bashrc
+source .bashrc
+
+
+
+
