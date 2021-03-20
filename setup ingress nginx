@@ -1,0 +1,11 @@
+-- op de master --
+
+kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/master/deploy/static/provider/baremetal/deploy.yaml
+
+-- test de controller --
+
+gebruik hiervoor de setup beschreven op https://www.linuxtechi.com/setup-nginx-ingress-controller-in-kubernetes/
+
+
+
+
